@@ -71,8 +71,6 @@ do i = 1, n_elem
 	endif
 enddo
 
-
-
 allocate(contact_elem(n_elem,30))
 
 contact_elem = 0
@@ -89,9 +87,8 @@ do i = 1,n_node
 	enddo
 enddo
 
-
-
 allocate(contact(n_elem,9),cont_numer(n_elem,8))
+contact = 0
 
 do i = 1,n_elem
 	s = 1 !Начальная позиция первого контакта
@@ -154,9 +151,8 @@ enddo
 
 
 do i = 1,n_bound
-	
-    ex:do j = n_point+n_bound+1,n_elem
-    ll = 1
+	ex:do j = n_point+n_bound+1,n_elem
+		ll = 1
 		do ii = 2,3
 			do jj = 6,9
 					if (bound(i,ii) == element(j,jj)) then
@@ -166,15 +162,16 @@ do i = 1,n_bound
 					if (ll == 3) then
 						bound(i,4) = j
 						
-						call posit(f,d1)
+						call posit(f,d)
+						call posit_cont(d,d1)
+						bound(i,2) = d
 						bound(i,5) = d1
-						call posit_cont(d1,d2)
+						call posit_cont(d,d2)
 						bound(i,7) = d2
 							
 						do k = 5,contact(j,9)+4
 							if (contact(j,k) == d2) bound(i,6) = contact(j,k-4) 
 						enddo
-						
 						
 						exit ex
 					endif
@@ -193,7 +190,7 @@ enddo
 
 write(1,*) n_bound
 do i = 1,n_bound
-	write(1,*) bound(i,1:3),bound(i,4)-n_point-n_bound,bound(i,5),bound(i,6)-n_point-n_bound,bound(i,7)
+	write(1,*) bound(i,1:2),bound(i,4)-n_point-n_bound,bound(i,5),bound(i,6)-n_point-n_bound,bound(i,7)
 enddo	
 
 write(1,*) n_cell
