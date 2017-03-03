@@ -195,7 +195,7 @@ enddo
 
 write(1,*) n_cell
 do i = n_point+n_bound+1,n_cell+n_point+n_bound
-	write(1,*) element(i,5:9)
+	write(1,*) element(i,6:9),element(i,5)
 enddo
 
 write(1,*)  
